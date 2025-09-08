@@ -10,24 +10,53 @@ import SwiftUI
 struct TrackerView: View {
     
     @State private var homeState: Bool = true
+    @State private var amount: Double = 0.0
     
     var body: some View {
         
         NavigationStack {
             
             if homeState {
-            
+                
                 ZStack {
                     
                     Color.flashLightGreen.ignoresSafeArea()
                     
-                    VStack {
+                    List {
                         
-                        Text("I own 0.0025 (BTC)")
+                        Section(header: Text("my bitcoin")) {
+                            TrackerBitcoinValueView()
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(8)
+                            // Remove default row background
+                                .listRowBackground(Color.clear)
+                        }
+                        
+                        Section(header: Text("my symbols")) {
+                            
+                            SymbolRowView(symbolCode: "ZAR")
+                            //SymbolRowView(rowTitle: "BTC-ZAR", rowSubTitle: "South African Rand")
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(8)
+                                .listRowBackground(Color.clear)
+                            
+                        }
+                        
                         
                     }
-                    .background(.white)
-                    .padding()
+                    .listStyle(.grouped)
+                    .tint(.white)
+                    .background(Color.flashGreen)
+                    .scrollContentBackground(.hidden) // For iOS 16+, to hide default background
+                    .background(Color.clear)
+                    .onAppear {
+                        UITableView.appearance().separatorStyle = .none
+                    }
+                    //.refreshable {
+                    //    //await viewModel.loadSymbols()
+                    //}
                     
                 }
                 .navigationBarTitle("Home", displayMode: .large)

@@ -11,7 +11,7 @@ struct SymbolsResponse: Codable {
     
     let success: Bool
     let symbols: [String: String]?
-    let error: ErrorResponse?
+    let error: ErrorResponse? // if there was an error we can parse the error from the API response
     
 }
 
@@ -32,3 +32,19 @@ enum SortCriteria {
     case code
     case name
 }
+
+/*
+ Sample response:
+ 
+ {
+     "success": true,
+     "symbols": {
+         "AED": "United Arab Emirates Dirham",
+         "AFN": "Afghan Afghani",
+         "ALL": "Albanian Lek",
+         "AMD": "Armenian Dram",
+         {...}
+     }
+ }
+ 
+ */

@@ -71,19 +71,51 @@ class ServiceRequest {
         
     }
     
-    func fetchLatestRates() async throws -> [String: Double] {
+    func fetchLatestRateFor(symbol: String) async throws -> (LatestRate) {
         
-        let urlString = APIEndpoint.latest.urlString
+        var urlComponents = URLComponents(string: APIEndpoint.latest.urlString)!
+        urlComponents.queryItems = [
+            URLQueryItem(name: "symbols", value: symbol)
+        ]
         
-        guard let url = URL(string: urlString) else { throw URLError(.badURL) }
+        guard let url = urlComponents.url else {
+            throw URLError(.badURL)
+        }
         
         var request = URLRequest(url: url)
-        request.setValue(apiKey, forHTTPHeaderField: "apikey")
+        // No need to set the API key in headers anymore
+        request.setValue(self.apiKey, forHTTPHeaderField: "apikey")
         
-        let (data, _) = try await URLSession.shared.data(for: request)
-        let response = try JSONDecoder().decode(RatesResponse.self, from: data)
+        let (data, response) = try await URLSession.shared.data(for: request)
         
-        return response.rates
+        if let httpResponse = response as? HTTPURLResponse {
+            if !(200...299).contains(httpResponse.statusCode) {
+                print("HTTP Error: \(httpResponse.statusCode)")
+                throw URLError(.badServerResponse)
+            }
+        }
+        do {
+            
+            let decodedResponse = try JSONDecoder().decode(LatestRatesResponse.self, from: data)
+            
+            if decodedResponse.success,
+                let rates = decodedResponse.rates {
+                var rate: LatestRate!
+                
+                for (code, value) in rates {
+                    rate = LatestRate(currencyCode: code, value: value)
+                }
+                
+                return (rate)
+                
+            } else {
+                print("API response unsuccessful or missing symbols")
+                throw URLError(.badServerResponse)
+            }
+        } catch {
+            print("Decoding Error: \(error)")
+            throw error
+        }
         
     }
     

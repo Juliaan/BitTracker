@@ -45,6 +45,8 @@ struct BitTrackerApp: App {
         // Set your desired color
         setNavigationBarColor(backgroundColor: UIColor(Color.flashDarkGreen))
         
+        UITableView.appearance().separatorStyle = .none
+        
     }
     
     var body: some Scene {
