@@ -11,6 +11,7 @@ struct TrackerView: View {
     
     @State private var homeState: Bool = true
     @State private var amount: Double = 0.0
+    @State private var trackedSet = Set<Currency>()
     
     var body: some View {
         
@@ -35,12 +36,16 @@ struct TrackerView: View {
                         
                         Section(header: Text("my symbols")) {
                             
-                            SymbolRowView(symbolCode: "ZAR")
+                            ForEach(trackedSet.sorted(by: { $0.id < $1.id })) { currency in
+                                SymbolRowView(symbolCode: currency.code, rowSubTitle: currency.name)
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(8)
+                                    .listRowBackground(Color.clear)
+                            }
+                            //SymbolRowView(symbolCode: "ZAR")
                             //SymbolRowView(rowTitle: "BTC-ZAR", rowSubTitle: "South African Rand")
-                                .padding()
-                                .background(Color.white)
-                                .cornerRadius(8)
-                                .listRowBackground(Color.clear)
+                                
                             
                         }
                         
@@ -52,7 +57,13 @@ struct TrackerView: View {
                     .scrollContentBackground(.hidden) // For iOS 16+, to hide default background
                     .background(Color.clear)
                     .onAppear {
+                        
                         UITableView.appearance().separatorStyle = .none
+                        
+                        if let savedTrackedSet = UserDefaultsHelper.loadCurrencySet(forKey: "trackedCurrencySet") {
+                            trackedSet = savedTrackedSet
+                        }
+                        
                     }
                     //.refreshable {
                     //    //await viewModel.loadSymbols()

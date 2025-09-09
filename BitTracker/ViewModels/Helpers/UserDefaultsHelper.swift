@@ -27,9 +27,9 @@ class UserDefaultsHelper {
 
     func loadCurrencysets() -> (base: Set<Currency>, tracked: Set<Currency>, all: Set<Currency>) {
         
-        let base = loadCurrencySet(forKey: baseKey) ?? []
-        let tracked = loadCurrencySet(forKey: trackedKey) ?? []
-        let all = loadCurrencySet(forKey: allKey) ?? []
+        let base = UserDefaultsHelper.loadCurrencySet(forKey: baseKey) ?? []
+        let tracked = UserDefaultsHelper.loadCurrencySet(forKey: trackedKey) ?? []
+        let all = UserDefaultsHelper.loadCurrencySet(forKey: allKey) ?? []
         
         return (base: base, tracked: tracked, all: all)
         
@@ -45,7 +45,7 @@ class UserDefaultsHelper {
         
     }
 
-    private func loadCurrencySet(forKey key: String) -> Set<Currency>? {
+    static func loadCurrencySet(forKey key: String) -> Set<Currency>? {
         
         guard let data = UserDefaults.standard.data(forKey: key),
               let array = try? JSONDecoder().decode([Currency].self, from: data) else {

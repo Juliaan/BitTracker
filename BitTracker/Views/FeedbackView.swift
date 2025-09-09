@@ -35,7 +35,7 @@ struct FeedbackView: View {
                 
             }
             .padding()
-            .symbolEffect(.breathe.pulse.wholeSymbol, options: .nonRepeating)
+            .symbolEffect(.bounce.up.byLayer, options: .repeat(.continuous))
             .foregroundColor(Color.flashDarkGreen)
             
         }

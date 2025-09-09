@@ -75,7 +75,8 @@ class ServiceRequest {
         
         var urlComponents = URLComponents(string: APIEndpoint.latest.urlString)!
         urlComponents.queryItems = [
-            URLQueryItem(name: "symbols", value: symbol)
+            URLQueryItem(name: "symbols", value: symbol),
+            URLQueryItem(name: "base", value: "BTC")
         ]
         
         guard let url = urlComponents.url else {

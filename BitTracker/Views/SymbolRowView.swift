@@ -17,54 +17,64 @@ struct SymbolRowView: View {
     var isUp: Bool = false
     
     var body: some View {
+        
         VStack {
         
-            HStack {
+            if !viewModel.isLoading {
                 
-                Text(rowSubTitle)
-                    .italic()
-                    .foregroundColor(.gray)
-                Spacer()
-                
-            }
-            
-            HStack {
-                
-                if isUp {
-                    Image(systemName: "arrow.up")
-                        .foregroundColor(.green)
-                } else {
-                    Image(systemName: "arrow.down")
-                        .foregroundColor(.red)
+                HStack {
+                    
+                    Text(rowSubTitle)
+                        .italic()
+                        .foregroundColor(.gray)
+                    Spacer()
+                    
                 }
                 
-                Text(rowTitle)
-                    .bold()
-                                    
-                Spacer()
+                HStack {
+                    
+                    if isUp {
+                        Image(systemName: "arrow.up")
+                            .foregroundColor(.green)
+                    } else {
+                        Image(systemName: "arrow.down")
+                            .foregroundColor(.red)
+                    }
+                    
+                    Text("BTC-\(viewModel.rateResult.id)")
+                        .bold()
+                                        
+                    Spacer()
+                    
+                    Text("\(String(format: "%.2f", viewModel.rateResult.rateValue))")
+                        .bold()
+                    
+                    Text("- 0.25%")
+                        .bold()
+                        .foregroundColor(isUp ? .flashGreen : .red)
+                    
+                }
                 
-                Text("1966620.860837")
-                    .bold()
+                HStack {
+                    
+                    Text(" ")
+                        .foregroundColor(.gray)
+                    Spacer()
+                    
+                }
                 
-                Text("- 0.25%")
-                    .bold()
-                    .foregroundColor(isUp ? .flashGreen : .red)
+                HStack {
+                    
+                    Text("1 Bitcoin = \(String(format: "%.2f", viewModel.rateResult.rateValue)) (\(viewModel.rateResult.id))")
+                        .foregroundColor(.gray)
+
+                    Spacer()
+                    
+                }
                 
-            }
-            
-            HStack {
+            } else {
                 
-                Text(" ")
-                    .foregroundColor(.gray)
-                Spacer()
-                
-            }
-            
-            HStack {
-                
-                Text("1 Bitcoin = 1966620.860837 (ZAR)")
-                    .foregroundColor(.gray)
-                Spacer()
+                FeedbackView(title: "...loading...")
                 
             }
             
