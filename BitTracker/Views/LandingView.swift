@@ -23,7 +23,7 @@ struct LandingView: View {
                     
                     Welcome()
                     
-                    NavigationLink(destination: BitcoinSetupView()) {
+                    NavigationLink(destination: BitcoinSetupView(editing: false, showBackButton: false)) {
                         HStack {
                             Text("Let's get started")
                                 .font(.largeTitle)

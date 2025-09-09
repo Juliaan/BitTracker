@@ -63,6 +63,7 @@ struct SymbolRowView: View {
                     
                     Text("\(String(format: "%.2f", viewModel.rateResult.rateValue))")
                         .bold()
+                        .foregroundColor(.black)
                     
                     Text("\(String(format: "%.2f", fluctuationViewModel.fluctuationResult?.changePct ?? 0))")
                         .bold()

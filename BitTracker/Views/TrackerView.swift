@@ -32,6 +32,9 @@ struct TrackerView: View {
                             .cornerRadius(8)
                         // Remove default row background
                             .listRowBackground(Color.clear)
+                            .onTapGesture {
+                                navigateToBitcoinValue = true
+                            }
                     }
                     .bold()
                     .foregroundColor(.white)
@@ -54,11 +57,13 @@ struct TrackerView: View {
                     
                 }
                 .listStyle(.grouped)
-                .tint(.white)
                 .background(Color.flashGreen)
                 .scrollContentBackground(.hidden) // For iOS 16+, to hide default background
                 .background(Color.clear)
                 .onAppear {
+                    
+                    navigateToBitcoinValue = false
+                    navigateToCurrencies = false
                     
                     UITableView.appearance().separatorStyle = .none
                     
@@ -86,13 +91,15 @@ struct TrackerView: View {
                     }
                 }
             }
-            .tint(.white)
             
         }
         .navigationDestination(isPresented: $navigateToCurrencies) {
             CurrencySetupView(editing: true, showBackButton: true)
         }
-        .tint(.white)
+        .navigationDestination(isPresented: $navigateToBitcoinValue) {
+            //CurrencySetupView(editing: true, showBackButton: true)
+            BitcoinSetupView(editing: true, showBackButton: true)
+        }
         
     }
     

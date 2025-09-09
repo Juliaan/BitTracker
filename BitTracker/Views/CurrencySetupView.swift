@@ -64,7 +64,6 @@ struct CurrencySetupView: View {
                             
                         }
                         .listStyle(.grouped)
-                        .tint(.white)
                         .background(Color.flashGreen)
                         .refreshable {
                             await viewModel.loadSymbols()
@@ -97,7 +96,6 @@ struct CurrencySetupView: View {
                         //Spacer()
                         
                     }
-                    .tint(.white)
                     
                 }
                 
@@ -118,13 +116,11 @@ struct CurrencySetupView: View {
                     dismissButton: .default(Text("OK"))
                 )
             }
-            .navigationBarTitle(!editing ? "Currency Setup" : "Edit Tracked Currencies", displayMode: .large)
+            .navigationBarTitle(!editing ? "Currency Setup" : "Edit Currencies", displayMode: .large)
             .navigationBarBackButtonHidden(!showBackButton)
             .navigationBarTitleDisplayMode(.automatic)
-            .tint(.white)
             
         }
-        .tint(.white)
         
     }
     
