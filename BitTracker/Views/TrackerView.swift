@@ -9,7 +9,9 @@ import SwiftUI
 
 struct TrackerView: View {
     
-    @State private var homeState: Bool = true
+    @State private var navigateToCurrencies = false
+    @State private var navigateToBitcoinValue = false
+    
     @State private var amount: Double = 0.0
     @State private var trackedSet = Set<Currency>()
     
@@ -17,97 +19,80 @@ struct TrackerView: View {
         
         NavigationStack {
             
-            if homeState {
+            ZStack {
                 
-                ZStack {
+                Color.flashLightGreen.ignoresSafeArea()
+                
+                List {
                     
-                    Color.flashLightGreen.ignoresSafeArea()
+                    Section(header: Text("my bitcoin")) {
+                        TrackerBitcoinValueView()
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(8)
+                        // Remove default row background
+                            .listRowBackground(Color.clear)
+                    }
+                    .bold()
+                    .foregroundColor(.white)
                     
-                    List {
+                    Section(header: Text("my currencies")) {
                         
-                        Section(header: Text("my bitcoin")) {
-                            TrackerBitcoinValueView()
+                        ForEach(trackedSet.sorted(by: { $0.id < $1.id })) { currency in
+                            SymbolRowView(symbolCode: currency.code, rowSubTitle: currency.name)
                                 .padding()
                                 .background(Color.white)
                                 .cornerRadius(8)
-                            // Remove default row background
                                 .listRowBackground(Color.clear)
-                        }
-                        
-                        Section(header: Text("my symbols")) {
-                            
-                            ForEach(trackedSet.sorted(by: { $0.id < $1.id })) { currency in
-                                SymbolRowView(symbolCode: currency.code, rowSubTitle: currency.name)
-                                    .padding()
-                                    .background(Color.white)
-                                    .cornerRadius(8)
-                                    .listRowBackground(Color.clear)
-                            }
-                            //SymbolRowView(symbolCode: "ZAR")
-                            //SymbolRowView(rowTitle: "BTC-ZAR", rowSubTitle: "South African Rand")
-                                
                             
                         }
                         
-                        
                     }
-                    .listStyle(.grouped)
-                    .tint(.white)
-                    .background(Color.flashGreen)
-                    .scrollContentBackground(.hidden) // For iOS 16+, to hide default background
-                    .background(Color.clear)
-                    .onAppear {
-                        
-                        UITableView.appearance().separatorStyle = .none
-                        
-                        if let savedTrackedSet = UserDefaultsHelper.loadCurrencySet(forKey: "trackedCurrencySet") {
-                            trackedSet = savedTrackedSet
-                        }
-                        
-                    }
-                    //.refreshable {
-                    //    //await viewModel.loadSymbols()
-                    //}
+                    .bold()
+                    .foregroundColor(.white)
+                    
                     
                 }
-                .navigationBarTitle("Home", displayMode: .large)
-                .navigationBarBackButtonHidden(true)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            // Handle settings action here
-                            homeState = false
-                        }) {
-                            Image(systemName: "gearshape.fill")
-                                .foregroundColor(.white)
-                        }
-                    }
-                }
-                
-            } else {
-                
-                ZStack {
+                .listStyle(.grouped)
+                .tint(.white)
+                .background(Color.flashGreen)
+                .scrollContentBackground(.hidden) // For iOS 16+, to hide default background
+                .background(Color.clear)
+                .onAppear {
                     
-                    Color.flashLightGreen.ignoresSafeArea()
+                    UITableView.appearance().separatorStyle = .none
+                    
+                    if let savedTrackedSet = UserDefaultsHelper.loadCurrencySet(forKey: "trackedCurrencySet") {
+                        trackedSet = savedTrackedSet
+                    }
                     
                 }
-                .navigationBarTitle("Setup", displayMode: .large)
-                .navigationBarBackButtonHidden(true)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            // Handle settings action here
-                            homeState = true
-                        }) {
-                            Image(systemName: "house.circle.fill")
-                                .foregroundColor(.white)
-                        }
-                    }
-                }
+                //.refreshable {
+                //    //await viewModel.loadSymbols()
+                //}
                 
             }
+            .navigationBarTitle("BitTracker", displayMode: .large)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        // Handle settings action here
+                        navigateToCurrencies = true
+
+                    }) {
+                        Image(systemName: "arrow.forward.circle.dotted")
+                            .foregroundColor(.white)
+                    }
+                }
+            }
+            .tint(.white)
             
         }
+        .navigationDestination(isPresented: $navigateToCurrencies) {
+            CurrencySetupView(editing: true, showBackButton: true)
+        }
+        .tint(.white)
         
     }
     

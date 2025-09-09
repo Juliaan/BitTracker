@@ -1,29 +1,23 @@
 //
-//  RateViewModel.swift
+//  FluctuationViewModel.swift
 //  BitTracker
 //
-//  Created by Juliaan Evenwel on 2025/09/08.
+//  Created by Juliaan Evenwel on 2025/09/09.
 //
 
 import Foundation
 import SwiftUI
 
 @MainActor
-class RateViewModel: ObservableObject {
+class FluctuationViewModel: ObservableObject {
     
-    @Published var rateResult = LatestRate(currencyCode: "", value: 0.0)
-    @Published var isLoading = false
+    @Published var fluctuationResult: FluctuationRateInfo? = nil
+    @Published var isLoading = true
     @Published var errorMessage: String?
     
     private let service = ServiceRequest()
     
-    /*
-    init() {
-        loadRateFor()
-    }
-    */
-    
-    func loadRateFor(symbol: String) async {
+    func loadFluctuationRateFor(symbol: String) async {
         
         Task {
         
@@ -36,11 +30,11 @@ class RateViewModel: ObservableObject {
             
             do {
             
-                let result = try await service.fetchLatestRateFor(symbol: symbol)
+                let result = try await service.fetchFluctuationFor(symbol: symbol)
                 
                 DispatchQueue.main.async {
                 
-                    self.rateResult = result
+                    self.fluctuationResult = result
                     
                     self.isLoading = false
                     
@@ -50,7 +44,7 @@ class RateViewModel: ObservableObject {
                 
                 DispatchQueue.main.async {
                     
-                    self.errorMessage = "Failed to load rate"
+                    self.errorMessage = "Failed to load fluctuation data"
                     self.isLoading = false
                     
                 }

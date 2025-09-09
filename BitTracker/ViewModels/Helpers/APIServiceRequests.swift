@@ -120,6 +120,60 @@ class ServiceRequest {
         
     }
     
+    func fetchFluctuationFor(symbol: String) async throws -> FluctuationRateInfo {
+        
+        var startDate: String {
+            DateHelper().dateMinusDays(1)
+        }
+        var endDate: String {
+            DateHelper().format(date: Date.now)
+        }
+        
+        var urlComponents = URLComponents(string: APIEndpoint.fluctuation.urlString)!
+        urlComponents.queryItems = [
+            URLQueryItem(name: "symbols", value: symbol),
+            URLQueryItem(name: "base", value: "BTC"), // always btc
+            URLQueryItem(name: "start_date", value: startDate),
+            URLQueryItem(name: "end_date", value: endDate)
+        ]
+        
+        guard let url = urlComponents.url else {
+            throw URLError(.badURL)
+        }
+        
+        var request = URLRequest(url: url)
+        // api key to header
+        request.setValue(self.apiKey, forHTTPHeaderField: "apikey")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        if let httpResponse = response as? HTTPURLResponse {
+            if !(200...299).contains(httpResponse.statusCode) {
+                print("HTTP Error: \(httpResponse.statusCode)")
+                throw URLError(.badServerResponse)
+            }
+        }
+        do {
+            
+            let decodedResponse = try JSONDecoder().decode(FluctuationResponse.self, from: data)
+            
+            if decodedResponse.success,
+               let rates = decodedResponse.rates {
+                
+                // Find and return the rate info for the specified symbol
+                return (rates[symbol]!)
+                
+            } else {
+                print("API response unsuccessful or missing symbols")
+                throw URLError(.badServerResponse)
+            }
+        } catch {
+            print("Decoding Error: \(error)")
+            throw error
+        }
+        
+    }
+    
 }
 
 

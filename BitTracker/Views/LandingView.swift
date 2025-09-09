@@ -35,7 +35,7 @@ struct LandingView: View {
                         }
                         .padding()
                         .background(Color.flashLightGreen)
-                        .cornerRadius(8)
+                        .cornerRadius(12)
                     }
                     .padding()
                     

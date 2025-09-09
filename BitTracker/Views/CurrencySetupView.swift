@@ -10,6 +10,13 @@ import SwiftUI
 struct CurrencySetupView: View {
     
     @ObservedObject private var viewModel = SymbolsViewModel()
+    @State private var editing: Bool = false
+    @State private var showBackButton: Bool = false
+    
+    init(editing: Bool = false, showBackButton: Bool = false) {
+        _editing = State(initialValue: editing)
+        _showBackButton = State(initialValue: showBackButton)
+    }
     
     var body: some View {
         
@@ -23,14 +30,10 @@ struct CurrencySetupView: View {
                     
                     VStack {
                         
-                        //Text("Pull down to refresh")
-                        //        .font(.footnote)
-                        //        .foregroundColor(.gray)
-                        //        .padding()
                         List {
                             
                             if !viewModel.baseCurrencies.isEmpty {
-                            
+                                
                                 Section(header: Text("Base Currency")) {
                                     ForEach(viewModel.baseCurrencies.sorted(by: { $0.name < $1.name })) { currency in
                                         CurrencyListCellView(currency: currency)
@@ -40,7 +43,7 @@ struct CurrencySetupView: View {
                             }
                             
                             if !viewModel.trackedCurrencies.isEmpty {
-                            
+                                
                                 Section(header: Text("Tracked Currencies")) {
                                     ForEach(viewModel.trackedCurrencies.sorted(by: { $0.name < $1.name })) { currency in
                                         CurrencyListCellView(currency: currency)
@@ -50,7 +53,7 @@ struct CurrencySetupView: View {
                             }
                             
                             if !viewModel.currencies.isEmpty {
-                            
+                                
                                 Section(header: Text("World Currencies")) {
                                     ForEach(viewModel.currencies.sorted(by: { $0.name < $1.name })) { currency in
                                         CurrencyListCellView(currency: currency)
@@ -67,27 +70,35 @@ struct CurrencySetupView: View {
                             await viewModel.loadSymbols()
                         }
                         
-                        NavigationLink(destination: TrackerView()) {
-                            HStack {
-                                Text("Start tracking")
-                                    .font(.largeTitle)
-                                    .foregroundColor(.white)
-                                Spacer()
-                                Image(systemName: "chevron.right.dotted.chevron.right")
-                                    .foregroundColor(.white)
-                                    .font(.largeTitle)
+                        if !editing {
+                        
+                            NavigationLink(destination: TrackerView()) {
+                                HStack {
+                                    Text("Start tracking")
+                                        .font(.largeTitle)
+                                        .foregroundColor(.white)
+                                    Spacer()
+                                    Image(systemName: "chevron.right.dotted.chevron.right")
+                                        .foregroundColor(.white)
+                                        .font(.largeTitle)
+                                }
+                                .padding()
+                                .background(Color.flashLightGreen)
+                                .cornerRadius(12)
+                                .ignoresSafeArea()
+                                
                             }
                             .padding()
-                            .background(Color.flashLightGreen)
-                            .cornerRadius(8)
+                            .background(Color.flashDarkGreen)
+                            .ignoresSafeArea()
+                            
                         }
-                        .padding()
                         
-                        Spacer()
+                        //Spacer()
                         
                     }
                     .tint(.white)
-                                        
+                    
                 }
                 
             }
@@ -97,14 +108,26 @@ struct CurrencySetupView: View {
                 }
                 
             }
-            .navigationBarTitle("Currency Setup", displayMode: .large)
-            .navigationBarBackButtonHidden(true)
+            .alert(isPresented: Binding<Bool>(
+                get: { viewModel.errorMessage != nil },
+                set: { _ in viewModel.errorMessage = nil }
+            )) {
+                Alert(
+                    title: Text("Oops"),
+                    message: Text("Looks like we encountered an error."),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
+            .navigationBarTitle(!editing ? "Currency Setup" : "Edit Tracked Currencies", displayMode: .large)
+            .navigationBarBackButtonHidden(!showBackButton)
+            .navigationBarTitleDisplayMode(.automatic)
+            .tint(.white)
             
         }
-        
+        .tint(.white)
         
     }
-        
+    
 }
 
 #Preview {

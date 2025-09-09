@@ -16,10 +16,14 @@ struct TrackerBitcoinValueView: View {
             Image(systemName: "bitcoinsign.circle")
                 .resizable()
                 .frame(width: 24, height: 24)
-                .foregroundColor(.black)
-            Text(displayValue)
+                .foregroundColor(.flashDarkGreen)
+            Text("\(Double(displayValue) ?? 0)")
+                .foregroundColor(.flashDarkGreen)
+            
             Spacer()
             Image(systemName: "pencil")
+                .foregroundColor(.flashDarkGreen)
+            
         }
         .onAppear {
             if let savedValue = UserDefaults.standard.string(forKey: "lastEnteredAmount") {

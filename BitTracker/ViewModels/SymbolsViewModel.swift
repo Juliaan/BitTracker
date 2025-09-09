@@ -16,8 +16,7 @@ class SymbolsViewModel: ObservableObject {
     @Published var trackedCurrencies: Set<Currency> = []
     @Published var isLoading = false
     @Published var errorMessage: String?
-    @Published var searchString: String = ""
-
+    
     private let service = ServiceRequest()
     
     /*

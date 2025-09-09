@@ -63,11 +63,19 @@ struct BitTrackerApp: App {
 
 //JE: Custom styling via UIKit to style navbar background color
 func setNavigationBarColor(backgroundColor: UIColor, titleColor: UIColor = .white) {
+    
     let appearance = UINavigationBarAppearance()
+    
     appearance.configureWithOpaqueBackground()
     appearance.backgroundColor = backgroundColor
     appearance.titleTextAttributes = [.foregroundColor: titleColor]
     appearance.largeTitleTextAttributes = [.foregroundColor: titleColor]
+
     UINavigationBar.appearance().standardAppearance = appearance
+    
     UINavigationBar.appearance().scrollEdgeAppearance = appearance
+    
+    UINavigationBar.appearance().tintColor = UIColor.white
+    UINavigationBar.appearance().barTintColor = UIColor.white
+    
 }
