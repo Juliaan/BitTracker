@@ -71,6 +71,8 @@ struct TrackerView: View {
                         trackedSet = savedTrackedSet
                     }
                     
+                    UserDefaultsHelper.shared.saveDidCompleteSetup(true)
+                    
                 }
                 //.refreshable {
                 //    //await viewModel.loadSymbols()

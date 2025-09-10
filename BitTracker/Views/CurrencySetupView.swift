@@ -44,9 +44,15 @@ struct CurrencySetupView: View {
                             
                             if !viewModel.trackedCurrencies.isEmpty {
                                 
-                                Section(header: Text("Tracked Currencies")) {
+                                Section(header: Text("Tracked Currencies\ntap a row to remove the currency")) {
                                     ForEach(viewModel.trackedCurrencies.sorted(by: { $0.name < $1.name })) { currency in
                                         CurrencyListCellView(currency: currency)
+                                            .contentShape(Rectangle())
+                                            .onTapGesture {
+                                                        // Move from tracked to world currencies
+                                                        viewModel.removeTrackedCurrency(currency, from: &viewModel.trackedCurrencies, to: &viewModel.currencies)
+                                                
+                                                    }
                                     }
                                 }
                                 
@@ -54,9 +60,14 @@ struct CurrencySetupView: View {
                             
                             if !viewModel.currencies.isEmpty {
                                 
-                                Section(header: Text("World Currencies")) {
+                                Section(header: Text("World Currencies\ntap a row to track the currency")) {
                                     ForEach(viewModel.currencies.sorted(by: { $0.name < $1.name })) { currency in
                                         CurrencyListCellView(currency: currency)
+                                            .contentShape(Rectangle())
+                                            .onTapGesture {
+                                                        // Move from world currencies to tracked
+                                                        viewModel.removeWorldCurrency(currency, from: &viewModel.currencies, to: &viewModel.trackedCurrencies)
+                                                    }
                                     }
                                 }
                                 
@@ -92,17 +103,20 @@ struct CurrencySetupView: View {
                             .ignoresSafeArea()
                             
                         }
-                        
-                        //Spacer()
-                        
+  
                     }
                     
                 }
                 
             }
             .onAppear() {
-                Task {
-                    await viewModel.loadSymbols()
+                
+                if !editing {
+                    Task {
+                        await viewModel.loadSymbols()
+                    }
+                } else {
+                    viewModel.loadSymbolsFromLocalStorage()
                 }
                 
             }

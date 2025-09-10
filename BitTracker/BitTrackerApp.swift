@@ -50,15 +50,23 @@ struct BitTrackerApp: App {
     }
     
     var body: some Scene {
+        
         WindowGroup {
-            if didCompleteSetup {
-                //TrackerView()
-            } else {
-                LandingView()
+            NavigationStack {
+            
+                if didCompleteSetup {
+                    TrackerView()
+                } else {
+                    LandingView()
+                }
+                
             }
             
+            
         }
+        
     }
+    
 }
 
 //JE: Custom styling via UIKit to style navbar background color
