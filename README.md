@@ -1,8 +1,6 @@
 # Flash-Assessment
 This repository contains an iOS Assessment project for the Flash Group.
 
-![](https://github.com/Juliaan/Warp-Assessment/blob/main/ScreenRecording.gif)
-
 ### Get Started
 
 1. Clone the project to your local environment using terminal or any git client installed on your computer.
