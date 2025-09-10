@@ -8,7 +8,15 @@
 import SwiftUI
 
 struct BitCoinContentView: View {
+    
     @State private var amount: Double = 0.0
+    @State private var editMode: Bool = false
+    @State private var showBackButton: Bool = false
+    
+    init(editing: Bool = false, showBackButton: Bool = false) {
+        _editMode = State(initialValue: editing)
+        _showBackButton = State(initialValue: showBackButton)
+    }
     
     var body: some View {
         
@@ -18,14 +26,19 @@ struct BitCoinContentView: View {
                 .foregroundColor(.white)
                 .padding(.top, 20)
             
-            BitcoinTextFieldView(value: $amount)
+            BitcoinTextFieldView(value: $amount, isEditing: $editMode)
             
-            Text("Your base currency is Bitcoin (BTC). You'll see trends against ZAR, USD, and AUD. You can change these in settings anytime.")
-                .foregroundColor(.white)
-                .multilineTextAlignment(.center)
-                .italic()
-                .padding(.leading, 20)
-                .padding(.trailing, 20)
+            if !editMode {
+                
+                Text("Your base currency is Bitcoin (BTC). You'll see trends against ZAR, USD, and AUD. You can change these in settings anytime.")
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                    .italic()
+                    .padding(.leading, 20)
+                    .padding(.trailing, 20)
+                
+            }
+            
             
         }
         .background(Color.flashGreen)
@@ -36,6 +49,8 @@ struct BitCoinContentView: View {
 struct BitcoinTextFieldView: View {
     
     @Binding var value: Double
+    @Binding var isEditing: Bool
+    
     @State private var text: String = ""
     @State private var navigateToCurrencySetup = false //JE: Navigation state variable
     
@@ -68,7 +83,10 @@ struct BitcoinTextFieldView: View {
                             
                             hideKeyboard()
                             
-                            navigateToCurrencySetup = true
+                            if !isEditing {
+                                navigateToCurrencySetup = true
+                            }
+                            
                             
                             // Save to UserDefaults when done
                             UserDefaults.standard.set(value, forKey: userDefaultsKey)

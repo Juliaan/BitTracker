@@ -9,6 +9,14 @@ import SwiftUI
 
 struct BitcoinSetupView: View {
     
+    @State private var editing: Bool = false
+    @State private var showBackButton: Bool = false
+    
+    init(editing: Bool = false, showBackButton: Bool = false) {
+        _editing = State(initialValue: editing)
+        _showBackButton = State(initialValue: showBackButton)
+    }
+    
     var body: some View {
         
         ZStack {
@@ -20,7 +28,7 @@ struct BitcoinSetupView: View {
                 
                 VStack {
                     
-                    BitCoinContentView()
+                    BitCoinContentView(editing: editing, showBackButton: showBackButton)
                     
                 }
                 
@@ -29,8 +37,8 @@ struct BitcoinSetupView: View {
             }
             
         }
-        .navigationBarTitle("Bitcoin Setup", displayMode: .large)
-        .navigationBarBackButtonHidden(true)
+        .navigationBarTitle(editing ? "Edit Bitcoin" : "Bitcoin Setup", displayMode: .large)
+        .navigationBarBackButtonHidden(!showBackButton)
         
     }
     

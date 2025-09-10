@@ -23,7 +23,7 @@ struct LandingView: View {
                     
                     Welcome()
                     
-                    NavigationLink(destination: BitcoinSetupView()) {
+                    NavigationLink(destination: BitcoinSetupView(editing: false, showBackButton: false)) {
                         HStack {
                             Text("Let's get started")
                                 .font(.largeTitle)
@@ -35,7 +35,7 @@ struct LandingView: View {
                         }
                         .padding()
                         .background(Color.flashLightGreen)
-                        .cornerRadius(8)
+                        .cornerRadius(12)
                     }
                     .padding()
                     

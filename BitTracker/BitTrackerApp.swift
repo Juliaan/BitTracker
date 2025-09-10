@@ -45,27 +45,45 @@ struct BitTrackerApp: App {
         // Set your desired color
         setNavigationBarColor(backgroundColor: UIColor(Color.flashDarkGreen))
         
+        UITableView.appearance().separatorStyle = .none
+        
     }
     
     var body: some Scene {
+        
         WindowGroup {
-            if didCompleteSetup {
-                //TrackerView()
-            } else {
-                LandingView()
+            NavigationStack {
+            
+                if didCompleteSetup {
+                    TrackerView()
+                } else {
+                    LandingView()
+                }
+                
             }
             
+            
         }
+        
     }
+    
 }
 
 //JE: Custom styling via UIKit to style navbar background color
 func setNavigationBarColor(backgroundColor: UIColor, titleColor: UIColor = .white) {
+    
     let appearance = UINavigationBarAppearance()
+    
     appearance.configureWithOpaqueBackground()
     appearance.backgroundColor = backgroundColor
     appearance.titleTextAttributes = [.foregroundColor: titleColor]
     appearance.largeTitleTextAttributes = [.foregroundColor: titleColor]
+
     UINavigationBar.appearance().standardAppearance = appearance
+    
     UINavigationBar.appearance().scrollEdgeAppearance = appearance
+    
+    UINavigationBar.appearance().tintColor = UIColor.white
+    UINavigationBar.appearance().barTintColor = UIColor.white
+    
 }
